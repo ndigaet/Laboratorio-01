@@ -11,6 +11,29 @@ from mpl_toolkits.mplot3d import Axes3D
 from matplotlib.colors import ListedColormap
 from scipy.stats import multivariate_normal
 
+def plot_gaussians(X, mu1, sigma1, mu2, sigma2, prior1=0.5, prior2=0.5, N = 100, alpha = 0.5, titulo = ''):
+    X1 = np.linspace(X[:,0].min(), X[:,0].max(), N)
+    X2 = np.linspace(X[:,1].min(), X[:,1].max(), N)
+    X1, X2 = np.meshgrid(X1, X2)
+
+    # Pack X and Y into a single 3-dimensional array
+    pos = np.empty(X1.shape + (2,))
+    pos[:, :, 0] = X1
+    pos[:, :, 1] = X2
+
+    # The distribution on the variables X, Y packed into pos.
+    Z_1 = multivariate_normal.pdf(pos, mu1, sigma1) * prior1
+    Z_2 = multivariate_normal.pdf(pos, mu2, sigma2) * prior2
+    fig = plt.figure(figsize=(15,10))
+    ax = fig.gca(projection='3d')
+    cm1 = plt.cm.Reds
+    cm2 = plt.cm.Blues
+    ax.contourf(X1, X2, Z_1, 256, cmap = cm1)
+    ax.contourf(X1, X2, Z_2, 256, alpha = alpha, cmap = cm2) 
+    plt.title(titulo)
+    plt.show()
+
+'''
 def plot_gaussians(X, mu1, sigma1, mu2, sigma2, prior1=0.5, prior2=0.5, N = 100, alpha = 0.5):
     X1 = np.linspace(X[:,0].min(), X[:,0].max(), N)
     X2 = np.linspace(X[:,1].min(), X[:,1].max(), N)
@@ -29,8 +52,9 @@ def plot_gaussians(X, mu1, sigma1, mu2, sigma2, prior1=0.5, prior2=0.5, N = 100,
     cm1 = plt.cm.Reds
     cm2 = plt.cm.Blues
     ax.contourf(X1, X2, Z_1, 256, cmap = cm1)
-    ax.contourf(X1, X2, Z_2, 256, alpha = alpha, cmap = cm2)
+    ax.contourf(X1, X2, Z_2, 256, alpha = alpha, cmap = cm2) 
     plt.show()
+'''
 
 def get_weights_array(ws):
     weights_norm = []
